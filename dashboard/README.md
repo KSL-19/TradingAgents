@@ -1,29 +1,28 @@
-# TradingAgents Dashboard 1.1 — real daily/swing research
+# TradingAgents Dashboard 1.2 — model selection and execution diagnostics
 
-Open TradingAgents-Dashboard.zip in this folder and click Download raw file (the down-arrow download button).
+Open TradingAgents-Dashboard.zip and click Download raw file to download the Windows/macOS/Linux package.
 
-## Windows update
+## Upgrade on Windows
 
-1. Close the old dashboard command window.
-2. Download the ZIP, then right-click it in Downloads and choose Extract All, then Extract. Use a new folder for this upgrade.
-3. Open the extracted TradingAgents-Dashboard folder and double-click Start Dashboard.bat. Python 3.12 is required; the helper can ask the Python install manager to install it if missing.
-4. The updated app opens in Real market data mode. Charts do not need an OpenAI key. Check Yahoo source, quote time and completed-session date against your broker.
-5. Open Connections & settings. Create an OpenAI API key at https://platform.openai.com/api-keys, enable API billing if needed, then enter the key locally and click Save & test connection. Never post a key in chat or GitHub.
-6. Run the AI analyst team with verified model IDs. ChatGPT subscriptions do not include API usage. For SEC fundamentals, add your real contact details.
+1. Stop the previous dashboard by closing its command window.
+2. Download and extract this ZIP into a new folder.
+3. To keep your existing key, settings and reports, copy the old folder's .data directory into the new extracted folder while both versions are stopped. Do not copy old backend/frontend or .venv directories over the update. Windows DPAPI keys remain bound to your Windows account.
+4. Open Start Dashboard.bat. In Connections & settings, refresh the model list and choose Use recommended models, or select account-listed Sol/Astra models if available.
+5. Optionally click Test AI execution (API charges apply). This explicitly performs up to two bounded model requests; it is distinct from the free model-list test.
+6. Run AI analysis. If the provider blocks execution, the failed report now shows a safe code, action and diagnostic download instead of a generic failure.
 
-The ZIP includes WINDOWS-START-HERE.md, full setup instructions, source, a prebuilt interface, the unchanged upstream TradingAgents wheel, and validation notes.
+## Changes
 
-## What changed
+- Exact account-returned model choices replace fixed old defaults. Sol/Astra are preferred when actually listed; no model access is invented and known embeddings/audio/images are excluded.
+- Expired model discovery refreshes during startup of an analysis. The UI explains missing or invalid selections instead of silently blocking a configured account.
+- A free readiness check and separate optional billed tool-call/structured-output execution probe diagnose API billing, permissions and model compatibility.
+- Reasoning output budget increased; requests and total analysis are bounded. Safe error codes distinguish quota, rate limit, authentication, model/parameter/output issues, timeouts and worker crashes.
+- Failed runs support explicit retry and safe diagnostic copy/download. Real analyst tool callbacks improve data-coverage observations without storing tool bodies or secrets.
 
-- Real market data is now the default; prior demo preferences are ignored. Demo examples remain a separate opt-in and are explicitly fictional.
-- A completed daily close/session date is separate from a newer regular-session quote and provider timestamp. Quote source, refresh and freshness are visible.
-- Local provider setup, model-list connection checks, secret storage, and source-coverage limitations were added. Windows keys use user-scoped DPAPI.
-- Real AI runs preflight market access before starting paid model calls. Real quote or source failures do not silently become synthetic output.
+The user reported that model-list testing succeeded but analysis failed. The older worker discarded its underlying exception, so the original cause is still unconfirmed. A model's age alone does not explain an API failure. The execution test on the user's machine can reveal actual generation quota or access problems. API billing is separate from a ChatGPT subscription.
 
-This is for research and manual broker execution. There is no trial expiry and no broker-order execution. Optional paper accounts use virtual money. Free Yahoo data may be delayed and is not a guaranteed executable broker feed.
+## Verification
 
-## Validation and remaining setup
+165 backend tests, integrated browser smoke, desktop/mobile model UI checks, a production build and fresh Linux ZIP installation passed. The actual installed Sol/Astra adapters also serialized and parsed native Responses API fixture requests through a local HTTP mock. No actual paid model calls were made here; account access, billing and provider availability still require the user's local execution test.
 
-88 backend tests, isolated desktop/mobile browser checks, production build and a fresh Linux ZIP installation passed. Provider responses in tests were fixtures. Actual current prices and a paid OpenAI analysis were not verified in the cloud environment because applicable network access and a user key were unavailable. Complete the local price comparison, model-list check and actual research run before relying on real-service readiness. The user's reported NVDA close was not hardcoded. Native Windows DPAPI behavior still needs execution on Windows.
-
-To preserve old reports and practice balances, stop both versions and copy only the old .data folder into the new extracted folder. Do not overwrite new code with old backend/frontend directories or copy the old virtual environment.
+See WINDOWS-START-HERE.md, TROUBLESHOOTING.md and VALIDATION.md inside the ZIP. Real market data remains the default, with source/session timestamps; Demo examples remain explicitly synthetic. The app does not execute broker orders. No secret or personal .data directory is included in the package.
